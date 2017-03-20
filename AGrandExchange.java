@@ -101,6 +101,42 @@ public class AGrandExchange {
         return false;
     }
     
+    /** Places an offer to buy select item at guide price
+     * 
+     * @param item name of item to buy
+     * @param amount amount of item to buy
+     * @return true if buy offer placed successfully
+     */
+    public static boolean buy(String item, int amount) {
+        if (amount < 1)
+            return true;
+        if (!GEMainWindowOpen()) {
+            GrandExchange.close();
+            General.sleep (200, 700);
+            openGE();
+        }
+        for (int i = 7; i < 15; i++) {
+            if (Interfaces.get(465, i) != null) {
+                if (!Interfaces.get(465, i).getChild(3).isHidden()) {
+                    if (Interfaces.get(465, i).getChild(3).click("Create Buy offer")) {
+                        General.sleep(300, 800);
+                        if (setItem(item)) {
+                            General.sleep(300, 800);
+                            if (GrandExchange.setQuantity(amount)) {
+                                General.sleep (300, 800);
+                                if (GrandExchange.confirmOffer()) {
+                                    General.sleep (300, 800);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
     /** Places an offer to buy select item at +5% guide price
      * 
      * @param item name of item to buy
