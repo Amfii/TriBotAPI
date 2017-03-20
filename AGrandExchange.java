@@ -207,8 +207,15 @@ public class AGrandExchange {
                         while (!GrandExchange.getItemName().equals(item)) {
                             if (!newOfferWindowOpen())
                                 return false;
-                            setItem(item);
-                            General.sleep(300, 800);
+                            if (setItem(item)) {
+                                Timing.waitCondition(new Condition() {
+                                    @Override
+                                    public boolean active() {
+                                        General.sleep(100); // Add this in to reduce CPU usage
+                                        return GrandExchange.getItemName().equals(item);
+                                    }
+                                }, General.random(5000, 8000));
+                            }
                         }
                         if (GrandExchange.setQuantity(amount)) {
                             General.sleep (300, 800);
